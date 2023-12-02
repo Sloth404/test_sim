@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Börsensimulation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Börsensimulation</h1>
+        <div id="user-info">
+            <span id="username"></span> |
+            <span id="balance"></span>
+        </div>
+    </header>
+    <main>
+        <section id="stock-prices">
+            <ul id="stock-list"></ul>
+            <button id="prevScrollButton">Zurück</button>
+            <button id="nextScrollButton">Weiter</button>
+        </section>
+        <section id="graphs">
+            <canvas id="stockgraph"></canvas>
+        </section>
+        <section id="transactions">
+
+        </section>
+            <button id="buy">buy</button>
+            <button id="sell">sell</button>
+        <section id="leaderboard">
+
+        </section>
+        <section id="messages">
+            <marquee id="news" behavior="scroll" direction="left" onmouseover="this.stop()" onmouseout="this.start()"></marquee>
+        </section>
+    </main>
+    <script src="user_script.js"></script>
+    <script src="news_script.js"></script>
+    <script src="stock_script.js"></script>
+    <script src="trading_script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="graph_script.js"></script>
+</body>
+</html>
+
