@@ -1,10 +1,9 @@
 'use strict'
 
-const news_mar = document.getElementById('news');
-
 function init() {
     //constant and variable declaration
-    const min = 60;
+
+    const min = 5;
     let time = '';
     if(min) {
         time = '?letzteZeit=' + convert(min).toString();
@@ -14,7 +13,7 @@ function init() {
 }
 
 function outerGetNews() {
-    const min = 60;
+    const min = 5;
     let time = '';
     if(min) {
         time = '?letzteZeit=' + convert(min).toString();
@@ -48,16 +47,19 @@ function convert(min) {
 }
 
 function processing_news(data_news) {
+    const news_mar = document.getElementById('news');
+    news_mar.innerHTML = '';
     let news_str = '';
 
+    console.log(news_str)
     try {
         data_news.forEach(entry => {
-            news_str += entry.zeit;
             news_str += entry.uhrzeit;
+            news_str += ': '
             news_str += entry.text;
         });
     } catch {
-        //TODO add something
+        console.error('Keine Nachrichten');
     }
 
     if(!news_str) {

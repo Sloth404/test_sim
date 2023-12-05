@@ -36,24 +36,24 @@ function performTransaction(data_stock, type) {
         // Perform the buy/sell transaction
         if (type === 'buy') {
             postData(selectedStock.name, quantity);
-            console.log(`Buy ${quantity} shares of ${selectedStock.name}`);
         } else if (type === 'sell') {
             // Sell transaction logic (you can implement this part)
             postData(selectedStock.name, -quantity);
-            console.log(`Sell ${quantity} shares of ${selectedStock.name}`);
         }
     }
 }
 
-function postData(stockname, quantity) {
+function postData(stockname2, quantity2) {
     const url = '/api/umsaetze';
 
     const postData = {
         'aktie': {
-            'name': stockname
+            'name': stockname2
         },
-        'anzahl': quantity
+        'anzahl': quantity2
     };
+
+    console.log(postData);
 
     const requestOption = {
         method: 'POST',
@@ -71,7 +71,8 @@ function postData(stockname, quantity) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
+            outerGetNews();
+            getUser();
             return data;
         })
         .catch(error => {
