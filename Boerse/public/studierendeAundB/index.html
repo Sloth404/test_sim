@@ -19,25 +19,34 @@
             <button id="prevScrollButton">Zurück</button>
             <button id="nextScrollButton">Weiter</button>
         </section>
-        <section id="graphs">
-            <canvas id="stockgraph"></canvas>
+        <section id="chart-container">
         </section>
+        <section id="error-section"></section>
         <section id="transactions">
-
+            <h2>Transactions</h2>
+            <form id="transaction-form">
+                <label for="stock-select">Select Stock:</label>
+                <select id="stock-select" name="stock">
+                    <!-- Optionen werden dynamisch hinzugefügt -->
+                </select>
+                <label for="quantity-input">Quantity:</label>
+                <input type="number" id="quantity-input" name="quantity" min="1" required>
+                <button type="button" onclick="getStockData('buy')">Buy</button>
+                <button type="button" onclick="getStockData('sell')">Sell</button>
+            </form>
         </section>
-            <button id="buy">buy</button>
-            <button id="sell">sell</button>
         <section id="leaderboard">
-
+            <ul id="user_list"></ul>
         </section>
         <section id="messages">
-            <marquee id="news" behavior="scroll" direction="left" onmouseover="this.stop()" onmouseout="this.start()"></marquee>
+            <h4 id="news"></h4>
         </section>
     </main>
     <script src="user_script.js"></script>
     <script src="news_script.js"></script>
     <script src="stock_script.js"></script>
     <script src="trading_script.js"></script>
+    <script src="ranking_script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="graph_script.js"></script>
 </body>

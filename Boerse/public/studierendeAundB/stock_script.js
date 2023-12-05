@@ -1,18 +1,16 @@
-"use strict";
-
 document.addEventListener("DOMContentLoaded", function () {
     const stockList = document.getElementById("stock-list");
-    const nextScrollButton = document.getElementById("nextScrollButton");
-    const prevScrollButton = document.getElementById("prevScrollButton");
+    const chartContainer = document.getElementById("chart-container");
 
-    let startIndex = 0;
     let entriesPerPage = calculateEntriesPerPage();
+    const stockData = {};
 
     function fetchData() {
         fetch("/api/aktien")
             .then((response) => response.json())
             .then((data_stock) => {
                 updateStockList(data_stock);
+                populateStockOptions(data_stock);
             })
             .catch((error) => console.error("Error fetching data:", error));
     }
@@ -20,33 +18,74 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateStockList(data) {
         stockList.innerHTML = "";
 
-        const endIndex = startIndex + entriesPerPage;
-        const visibleEntries = data.slice(startIndex, endIndex);
+        const numCharts = data.length;
 
-        visibleEntries.forEach((entry) => {
+        for (let i = 0; i < numCharts; i++) {
+            const entry = data[i];
+
             const stockDiv = document.createElement("div");
             stockDiv.innerHTML = `<h3>${entry.name}</h3><p>${entry.preis} EUR</p>`;
             stockDiv.style.padding = '20px';
             stockDiv.childNodes.forEach((item) => {
                 item.style.textAlign = 'center';
-            })
+            });
             stockList.appendChild(stockDiv);
-        });
 
-        nextScrollButton.style.display =
-            data.length > endIndex ? "block" : "none";
-        prevScrollButton.style.display =
-            startIndex > 0 ? 'block' : 'none';
+            if (!stockData[entry.name]) {
+                const chartCanvas = document.createElement("canvas");
+                chartCanvas.width = 400;
+                chartCanvas.height = 200;
+                chartContainer.appendChild(chartCanvas);
+
+                stockData[entry.name] = {
+                    chart: new Chart(chartCanvas, {
+                        type: 'line',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: entry.name, // Hier den Namen der Aktie als Label verwenden
+                                data: [],
+                                fill: false,
+                                borderColor: 'blue'
+                            }]
+                        }
+                    }),
+                    prices: []
+                };
+            }
+
+            const chartData = prepareChartData(entry.name, entry.preis);
+            updateStockChart(entry.name, chartData);
+        }
     }
 
-    function handleNextScroll() {
-        startIndex += entriesPerPage;
-        fetchData();
+    function prepareChartData(stockName, currentPrice) {
+        const chartData = {
+            labels: [],
+            prices: []
+        };
+
+        chartData.labels.push(new Date().toLocaleTimeString());
+        chartData.prices.push(currentPrice);
+
+        chartData.labels = [...stockData[stockName].chart.data.labels, ...chartData.labels];
+        chartData.prices = [...stockData[stockName].prices, ...chartData.prices];
+
+        const maxDataPoints = 20;
+        if (chartData.labels.length > maxDataPoints) {
+            chartData.labels = chartData.labels.slice(-maxDataPoints);
+            chartData.prices = chartData.prices.slice(-maxDataPoints);
+        }
+
+        stockData[stockName].prices = chartData.prices;
+
+        return chartData;
     }
 
-    function handlePreviousScroll() {
-        startIndex = Math.max(0, startIndex - entriesPerPage);
-        fetchData();
+    function updateStockChart(stockName, chartData) {
+        stockData[stockName].chart.data.labels = chartData.labels;
+        stockData[stockName].chart.data.datasets[0].data = chartData.prices;
+        stockData[stockName].chart.update();
     }
 
     function calculateEntriesPerPage() {
@@ -68,9 +107,6 @@ document.addEventListener("DOMContentLoaded", function () {
         entriesPerPage = calculateEntriesPerPage();
         fetchData();
     }
-
-    nextScrollButton.addEventListener("click", handleNextScroll);
-    prevScrollButton.addEventListener("click", handlePreviousScroll);
 
     window.addEventListener("resize", handleResize);
 

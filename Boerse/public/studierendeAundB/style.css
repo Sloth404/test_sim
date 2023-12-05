@@ -84,3 +84,23 @@ ul li {
   justify-content: center;
   padding: 20px 10px;
 }
+
+#chart-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+canvas {
+  width: 100%;
+  height: 100%; /* Ändere diese Zeile */
+  max-width: 400px; /* Ändere diese Zeile auf die gewünschte Breite */
+  border: 1px solid #ddd;
+}
